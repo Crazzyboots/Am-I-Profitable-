@@ -84,7 +84,7 @@ function makeProspectRecipe(
   baseId: string,
   oreName: string,
   oreBaseId: string,
-  results: { baseId: string; dropRate: number }[],
+  results: { baseId: string; dropRate: number; hasQuality: boolean }[],
   quality: Quality
 ): ProspectingRecipe {
   return {
@@ -94,10 +94,8 @@ function makeProspectRecipe(
     orePerProspect: 5,
     quality,
     guaranteedResults: guaranteedByproducts,
-    // Gem drops — use silver gem IDs as baseline prices
-    // (user sets prices for whatever quality they sell)
     results: results.map((r) => ({
-      materialId: `${r.baseId}-silver`,
+      materialId: r.hasQuality ? `${r.baseId}-silver` : r.baseId,
       dropRate: r.dropRate,
     })),
   };
@@ -109,11 +107,11 @@ const prospectDefs = [
     oreName: 'Refulgent Copper Ore',
     oreBaseId: 'refulgent-copper-ore',
     results: [
-      { baseId: 'sanguine-garnet', dropRate: 0.08 },
-      { baseId: 'amani-lapis', dropRate: 0.08 },
-      { baseId: 'harandar-peridot', dropRate: 0.08 },
-      { baseId: 'tenebrous-amethyst', dropRate: 0.08 },
-      { baseId: 'eversong-diamond', dropRate: 0.025 },
+      { baseId: 'sanguine-garnet', dropRate: 0.08, hasQuality: true },
+      { baseId: 'amani-lapis', dropRate: 0.08, hasQuality: true },
+      { baseId: 'harandar-peridot', dropRate: 0.08, hasQuality: true },
+      { baseId: 'tenebrous-amethyst', dropRate: 0.08, hasQuality: true },
+      { baseId: 'eversong-diamond', dropRate: 0.025, hasQuality: false },
     ],
   },
   {
@@ -121,11 +119,11 @@ const prospectDefs = [
     oreName: 'Umbral Tin Ore',
     oreBaseId: 'umbral-tin-ore',
     results: [
-      { baseId: 'harandar-peridot', dropRate: 0.12 },
-      { baseId: 'tenebrous-amethyst', dropRate: 0.12 },
-      { baseId: 'flawless-harandar-peridot', dropRate: 0.12 },
-      { baseId: 'flawless-tenebrous-amethyst', dropRate: 0.12 },
-      { baseId: 'eversong-diamond', dropRate: 0.045 },
+      { baseId: 'harandar-peridot', dropRate: 0.12, hasQuality: true },
+      { baseId: 'tenebrous-amethyst', dropRate: 0.12, hasQuality: true },
+      { baseId: 'flawless-harandar-peridot', dropRate: 0.12, hasQuality: true },
+      { baseId: 'flawless-tenebrous-amethyst', dropRate: 0.12, hasQuality: true },
+      { baseId: 'eversong-diamond', dropRate: 0.045, hasQuality: false },
     ],
   },
   {
@@ -133,11 +131,11 @@ const prospectDefs = [
     oreName: 'Brilliant Silver Ore',
     oreBaseId: 'brilliant-silver-ore',
     results: [
-      { baseId: 'sanguine-garnet', dropRate: 0.12 },
-      { baseId: 'amani-lapis', dropRate: 0.12 },
-      { baseId: 'flawless-sanguine-garnet', dropRate: 0.12 },
-      { baseId: 'flawless-amani-lapis', dropRate: 0.12 },
-      { baseId: 'eversong-diamond', dropRate: 0.045 },
+      { baseId: 'sanguine-garnet', dropRate: 0.12, hasQuality: true },
+      { baseId: 'amani-lapis', dropRate: 0.12, hasQuality: true },
+      { baseId: 'flawless-sanguine-garnet', dropRate: 0.12, hasQuality: true },
+      { baseId: 'flawless-amani-lapis', dropRate: 0.12, hasQuality: true },
+      { baseId: 'eversong-diamond', dropRate: 0.045, hasQuality: false },
     ],
   },
   {
@@ -145,11 +143,11 @@ const prospectDefs = [
     oreName: 'Dazzling Thorium',
     oreBaseId: 'dazzling-thorium',
     results: [
-      { baseId: 'flawless-sanguine-garnet', dropRate: 0.15 },
-      { baseId: 'flawless-amani-lapis', dropRate: 0.15 },
-      { baseId: 'flawless-harandar-peridot', dropRate: 0.15 },
-      { baseId: 'flawless-tenebrous-amethyst', dropRate: 0.15 },
-      { baseId: 'eversong-diamond', dropRate: 0.22 },
+      { baseId: 'flawless-sanguine-garnet', dropRate: 0.15, hasQuality: true },
+      { baseId: 'flawless-amani-lapis', dropRate: 0.15, hasQuality: true },
+      { baseId: 'flawless-harandar-peridot', dropRate: 0.15, hasQuality: true },
+      { baseId: 'flawless-tenebrous-amethyst', dropRate: 0.15, hasQuality: true },
+      { baseId: 'eversong-diamond', dropRate: 0.22, hasQuality: false },
     ],
   },
 ];
