@@ -35,6 +35,7 @@ const alloyDefs = [
     name: 'Refulgent Copper Ingot',
     itemId: 238201,
     materials: [
+      { baseId: 'luminant-flux', quantity: 2, hasQuality: false },
       { baseId: 'refulgent-copper-ore', quantity: 5, hasQuality: true },
     ],
   },
