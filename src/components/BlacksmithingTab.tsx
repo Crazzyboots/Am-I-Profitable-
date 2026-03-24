@@ -8,14 +8,17 @@ import PriceInput from './PriceInput';
 import StatsInput from './StatsInput';
 import ShoppingString from './ShoppingString';
 
-const BS_MATERIALS = [
-  { id: 'refulgent-copper-ore', label: 'Refulgent Copper Ore' },
-  { id: 'umbral-tin-ore', label: 'Umbral Tin Ore' },
-  { id: 'brilliant-silver-ore', label: 'Brilliant Silver Ore' },
-  { id: 'luminant-flux', label: 'Luminant Flux (vendor)' },
-  { id: 'refulgent-copper-ingot', label: 'Refulgent Copper Ingot' },
-  { id: 'gloaming-alloy', label: 'Gloaming Alloy' },
-  { id: 'sterling-alloy', label: 'Sterling Alloy' },
+// Price inputs grouped by category
+const BS_ORES = [
+  { label: 'Refulgent Copper Ore', silverId: 'refulgent-copper-ore-silver', goldId: 'refulgent-copper-ore-gold' },
+  { label: 'Umbral Tin Ore', silverId: 'umbral-tin-ore-silver', goldId: 'umbral-tin-ore-gold' },
+  { label: 'Brilliant Silver Ore', silverId: 'brilliant-silver-ore-silver', goldId: 'brilliant-silver-ore-gold' },
+];
+
+const BS_ALLOYS = [
+  { label: 'Refulgent Copper Ingot', silverId: 'refulgent-copper-ingot-silver', goldId: 'refulgent-copper-ingot-gold' },
+  { label: 'Gloaming Alloy', silverId: 'gloaming-alloy-silver', goldId: 'gloaming-alloy-gold' },
+  { label: 'Sterling Alloy', silverId: 'sterling-alloy-silver', goldId: 'sterling-alloy-gold' },
 ];
 
 export default function BlacksmithingTab() {
@@ -68,11 +71,40 @@ export default function BlacksmithingTab() {
           <p className="text-xs text-gray-500 mb-3">
             Yellow border = manual override. API won&apos;t overwrite manual prices.
           </p>
-          <div className="space-y-1">
-            {BS_MATERIALS.map((mat) => (
-              <PriceInput key={mat.id} materialId={mat.id} label={mat.label} />
+
+          {/* Ores with Silver/Gold columns */}
+          <div className="mb-4">
+            <div className="flex items-center justify-end gap-1 mb-1">
+              <span className="w-28 text-center text-xs text-gray-500">Silver</span>
+              <span className="w-28 text-center text-xs text-amber-500">Gold</span>
+            </div>
+            {BS_ORES.map((ore) => (
+              <div key={ore.label} className="flex items-center justify-between gap-1 py-1">
+                <span className="text-sm text-gray-300 truncate flex-1">{ore.label}</span>
+                <PriceInput materialId={ore.silverId} label="" compact />
+                <PriceInput materialId={ore.goldId} label="" compact isGold />
+              </div>
             ))}
           </div>
+
+          {/* Vendor */}
+          <div className="mb-4">
+            <PriceInput materialId="luminant-flux" label="Luminant Flux (vendor)" />
+          </div>
+
+          {/* Alloy sale prices */}
+          <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">Alloy Sale Prices</h4>
+          <div className="flex items-center justify-end gap-1 mb-1">
+            <span className="w-28 text-center text-xs text-gray-500">Silver</span>
+            <span className="w-28 text-center text-xs text-amber-500">Gold</span>
+          </div>
+          {BS_ALLOYS.map((alloy) => (
+            <div key={alloy.label} className="flex items-center justify-between gap-1 py-1">
+              <span className="text-sm text-gray-300 truncate flex-1">{alloy.label}</span>
+              <PriceInput materialId={alloy.silverId} label="" compact />
+              <PriceInput materialId={alloy.goldId} label="" compact isGold />
+            </div>
+          ))}
         </div>
 
         {/* Profits Table */}
@@ -80,13 +112,17 @@ export default function BlacksmithingTab() {
           <h3 className="text-sm font-semibold text-amber-400 mb-3 uppercase tracking-wider">
             Profits
           </h3>
-          <p className="text-xs text-gray-500 mb-3">
+          <p className="text-xs text-gray-500 mb-1">
             {bsStats.resourcefulness}% Resourcefulness &amp; {bsStats.multicraft}% Multicraft
+          </p>
+          <p className="text-xs text-gray-500 mb-3">
+            Silver rows use Silver mat prices → Silver output. Gold rows use Gold mat prices → Gold output.
           </p>
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-700 text-gray-400">
                 <th className="text-left py-2 pr-3">Recipe</th>
+                <th className="text-center py-2 px-1">Rank</th>
                 <th className="text-right py-2 px-2"># Crafts</th>
                 <th className="text-right py-2 px-2">Cost</th>
                 <th className="text-right py-2 px-2">Output</th>
@@ -100,10 +136,23 @@ export default function BlacksmithingTab() {
               {results.map((result) => (
                 <tr
                   key={result.recipe.id}
-                  className="border-b border-gray-700/50 hover:bg-gray-700/30"
+                  className={`border-b border-gray-700/50 hover:bg-gray-700/30 ${
+                    result.quality === 'gold' ? 'bg-amber-950/20' : ''
+                  }`}
                 >
                   <td className="py-2 pr-3 text-gray-200 font-medium">
                     {result.recipe.name}
+                  </td>
+                  <td className="text-center py-2 px-1">
+                    <span
+                      className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                        result.quality === 'gold'
+                          ? 'bg-amber-800/50 text-amber-300'
+                          : 'bg-gray-700/50 text-gray-400'
+                      }`}
+                    >
+                      {result.quality === 'gold' ? 'Gold' : 'Silver'}
+                    </span>
                   </td>
                   <td className="text-right py-2 px-2 text-gray-300">
                     {result.numCrafts}

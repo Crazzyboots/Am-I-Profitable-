@@ -90,7 +90,7 @@ export function calcAlloyProfit(
 
   return {
     recipe,
-    quality: 'silver',
+    quality: recipe.quality,
     numCrafts,
     totalCost,
     effectiveOutput,

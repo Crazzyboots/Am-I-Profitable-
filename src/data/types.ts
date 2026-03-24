@@ -6,6 +6,7 @@ export interface Material {
   itemId: number; // Blizzard API item ID
   isIntermediate?: boolean; // Can be crafted (e.g., Refulgent Copper Ingot)
   isVendor?: boolean; // Purchased from vendor (e.g., Luminant Flux)
+  quality?: Quality; // Silver or Gold variant
 }
 
 export interface RecipeMaterial {
@@ -20,6 +21,7 @@ export interface AlloyRecipe {
   materials: RecipeMaterial[];
   baseYield: number;
   canMulticraft: boolean;
+  quality: Quality;
 }
 
 export interface ProspectingResult {
@@ -34,6 +36,7 @@ export interface ProspectingRecipe {
   orePerProspect: number;
   results: ProspectingResult[];
   guaranteedResults: ProspectingResult[]; // Duskshrouded Stone, Crystalline Glass
+  quality: Quality;
 }
 
 export interface CrushingRecipe {
