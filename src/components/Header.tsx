@@ -1,6 +1,7 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
+import ImportPrices from './ImportPrices';
 
 export default function Header() {
   const { region, setRegion, lastUpdated, isLoading, setLoading, setBulkPrices } =
@@ -47,6 +48,9 @@ export default function Header() {
               <option value="eu">EU</option>
             </select>
           </div>
+
+          {/* Import Prices */}
+          <ImportPrices />
 
           {/* Refresh Prices */}
           <button
