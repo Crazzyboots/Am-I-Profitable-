@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Header from '@/components/Header';
+import ClientProvider from '@/components/ClientProvider';
 import BlacksmithingTab from '@/components/BlacksmithingTab';
 import JewelcraftingTab from '@/components/JewelcraftingTab';
 
@@ -11,6 +12,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('blacksmithing');
 
   return (
+    <ClientProvider>
     <div className="min-h-screen bg-gray-950 text-gray-100">
       <Header />
 
@@ -48,5 +50,6 @@ export default function Home() {
         {activeTab === 'jewelcrafting' && <JewelcraftingTab />}
       </main>
     </div>
+    </ClientProvider>
   );
 }
