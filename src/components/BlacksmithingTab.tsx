@@ -20,13 +20,14 @@ const BS_MATERIALS = [
 
 export default function BlacksmithingTab() {
   const { bsStats, setBsStats, bsCraftCount, setBsCraftCount } = useAppStore();
-  const priceMap = useAppStore((s) => s.getPriceMap());
+  const prices = useAppStore((s) => s.prices);
 
   const results = useMemo(() => {
+    const priceMap = new Map(Object.entries(prices).map(([id, entry]) => [id, entry]));
     return alloyRecipes.map((recipe) =>
       calcAlloyProfit(recipe, priceMap, bsStats, bsCraftCount)
     );
-  }, [priceMap, bsStats, bsCraftCount]);
+  }, [prices, bsStats, bsCraftCount]);
 
   const shoppingString = generateBlacksmithingShoppingString();
 

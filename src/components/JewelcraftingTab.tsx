@@ -40,17 +40,19 @@ const JC_BYPRODUCTS = [
 
 export default function JewelcraftingTab() {
   const { jcStats, setJcStats, jcProspectCount, setJcProspectCount } = useAppStore();
-  const priceMap = useAppStore((s) => s.getPriceMap());
+  const prices = useAppStore((s) => s.prices);
 
   const prospectResults = useMemo(() => {
+    const priceMap = new Map(Object.entries(prices).map(([id, entry]) => [id, entry]));
     return prospectingRecipes.map((recipe) =>
       calcProspectProfit(recipe, priceMap, jcStats, jcProspectCount)
     );
-  }, [priceMap, jcStats, jcProspectCount]);
+  }, [prices, jcStats, jcProspectCount]);
 
   const crushResults = useMemo(() => {
+    const priceMap = new Map(Object.entries(prices).map(([id, entry]) => [id, entry]));
     return crushingRecipes.map((recipe) => calcCrushProfit(recipe, priceMap));
-  }, [priceMap]);
+  }, [prices]);
 
   const shoppingString = generateJewelcraftingShoppingString();
 
