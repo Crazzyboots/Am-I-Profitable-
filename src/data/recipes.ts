@@ -8,62 +8,85 @@ import { AlloyRecipe, ProspectingRecipe, CrushingRecipe, Quality } from './types
 // Silver: uses silver mats → produces silver alloy
 // Gold: uses gold mats → produces gold alloy
 
-function makeAlloyRecipe(
-  baseId: string,
-  name: string,
-  itemId: number,
-  materials: { baseId: string; quantity: number; hasQuality: boolean }[],
-  quality: Quality
-): AlloyRecipe {
-  return {
-    id: `${baseId}-${quality}`,
-    name,
-    itemId,
-    baseYield: 1,
-    canMulticraft: true,
-    quality,
-    materials: materials.map((m) => ({
-      materialId: m.hasQuality ? `${m.baseId}-${quality}` : m.baseId,
-      quantity: m.quantity,
-    })),
-  };
-}
+type AlloyDef = {
+  baseId: string;
+  name: string;
+  itemId: number;
+  silverMaterials: { materialId: string; quantity: number }[];
+  goldMaterials: { materialId: string; quantity: number }[];
+};
 
-const alloyDefs = [
+const alloyDefs: AlloyDef[] = [
   {
     baseId: 'refulgent-copper-ingot',
     name: 'Refulgent Copper Ingot',
     itemId: 238201,
-    materials: [
-      { baseId: 'luminant-flux', quantity: 2, hasQuality: false },
-      { baseId: 'refulgent-copper-ore', quantity: 5, hasQuality: true },
+    silverMaterials: [
+      { materialId: 'luminant-flux', quantity: 2 },
+      { materialId: 'refulgent-copper-ore-silver', quantity: 5 },
+    ],
+    // Gold rank only needs 2 Gold ore + 3 Silver ore (not 5 Gold)
+    goldMaterials: [
+      { materialId: 'luminant-flux', quantity: 2 },
+      { materialId: 'refulgent-copper-ore-silver', quantity: 3 },
+      { materialId: 'refulgent-copper-ore-gold', quantity: 2 },
     ],
   },
   {
     baseId: 'gloaming-alloy',
     name: 'Gloaming Alloy',
     itemId: 238203,
-    materials: [
-      { baseId: 'luminant-flux', quantity: 4, hasQuality: false },
-      { baseId: 'umbral-tin-ore', quantity: 6, hasQuality: true },
-      { baseId: 'refulgent-copper-ingot', quantity: 3, hasQuality: true },
+    silverMaterials: [
+      { materialId: 'luminant-flux', quantity: 4 },
+      { materialId: 'umbral-tin-ore-silver', quantity: 6 },
+      { materialId: 'refulgent-copper-ingot-silver', quantity: 3 },
+    ],
+    // Gold rank: 3 Silver + 3 Gold tin, still 3 Gold ingot
+    goldMaterials: [
+      { materialId: 'luminant-flux', quantity: 4 },
+      { materialId: 'umbral-tin-ore-silver', quantity: 3 },
+      { materialId: 'umbral-tin-ore-gold', quantity: 3 },
+      { materialId: 'refulgent-copper-ingot-gold', quantity: 3 },
     ],
   },
   {
     baseId: 'sterling-alloy',
     name: 'Sterling Alloy',
     itemId: 238204,
-    materials: [
-      { baseId: 'luminant-flux', quantity: 4, hasQuality: false },
-      { baseId: 'brilliant-silver-ore', quantity: 6, hasQuality: true },
-      { baseId: 'refulgent-copper-ingot', quantity: 3, hasQuality: true },
+    silverMaterials: [
+      { materialId: 'luminant-flux', quantity: 4 },
+      { materialId: 'brilliant-silver-ore-silver', quantity: 6 },
+      { materialId: 'refulgent-copper-ingot-silver', quantity: 3 },
+    ],
+    // Gold rank: 3 Silver + 3 Gold brilliant silver, still 3 Gold ingot
+    goldMaterials: [
+      { materialId: 'luminant-flux', quantity: 4 },
+      { materialId: 'brilliant-silver-ore-silver', quantity: 3 },
+      { materialId: 'brilliant-silver-ore-gold', quantity: 3 },
+      { materialId: 'refulgent-copper-ingot-gold', quantity: 3 },
     ],
   },
 ];
 
 export const alloyRecipes: AlloyRecipe[] = alloyDefs.flatMap((def) => [
-  makeAlloyRecipe(def.baseId, def.name, def.itemId, def.materials, 'silver'),
-  makeAlloyRecipe(def.baseId, def.name, def.itemId, def.materials, 'gold'),
+  {
+    id: `${def.baseId}-silver`,
+    name: def.name,
+    itemId: def.itemId,
+    baseYield: 1,
+    canMulticraft: true,
+    quality: 'silver' as Quality,
+    materials: def.silverMaterials,
+  },
+  {
+    id: `${def.baseId}-gold`,
+    name: def.name,
+    itemId: def.itemId,
+    baseYield: 1,
+    canMulticraft: true,
+    quality: 'gold' as Quality,
+    materials: def.goldMaterials,
+  },
 ]);
 
 // ============================================
